@@ -93,6 +93,24 @@ def unpaid_members(conn: sqlite3.Connection, dues_month: str) -> list[Member]:
     return [Member.from_row(row) for row in rows]
 
 
+def dues_by_member(conn: sqlite3.Connection, year: int) -> list[dict]:
+    """Dues paid by every member during one year, for the yearly spreadsheet."""
+    rows = conn.execute(
+        """
+        SELECT m.full_name, m.student_code, m.status,
+               COUNT(i.id) AS months_paid,
+               COALESCE(SUM(i.amount), 0) AS total_paid
+        FROM members m
+        LEFT JOIN incomes i
+          ON i.member_id = m.id AND i.kind = ? AND i.received_on LIKE ?
+        GROUP BY m.id
+        ORDER BY m.full_name
+        """,
+        (INCOME_DUES, f"{year:04d}-%"),
+    ).fetchall()
+    return [dict(row) for row in rows]
+
+
 def dashboard_summary(conn: sqlite3.Connection) -> dict:
     """Figures for the home page."""
     month = current_month_key()

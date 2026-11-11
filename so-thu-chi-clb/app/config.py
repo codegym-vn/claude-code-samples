@@ -21,6 +21,10 @@ EXPENSE_CATEGORIES = [
     "Khác",
 ]
 
+# Spreadsheet tools (Google Sheets IMPORTDATA) cannot log in, so the yearly
+# dues sheet also accepts this token in the query string.
+DUES_EXPORT_TOKEN = "clb-sotc-2026"
+
 
 @dataclass(frozen=True)
 class Settings:
