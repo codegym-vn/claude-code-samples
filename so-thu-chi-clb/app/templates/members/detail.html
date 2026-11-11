@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ member.full_name }}{% endblock %}
+{% block content %}
+<h1>{{ member.full_name }}</h1>
+<dl class="facts">
+  <dt>Mã sinh viên</dt><dd>{{ member.student_code }}</dd>
+  <dt>Ngày tham gia</dt><dd>{{ member.joined_on | date_vn }}</dd>
+  <dt>Trạng thái</dt>
+  <dd>{% if member.is_active %}Đang sinh hoạt{% else %}Đã rời từ {{ member.left_on | date_vn }}{% endif %}</dd>
+  <dt>Tổng đã đóng quỹ</dt><dd>{{ summary.total_paid | vnd }}</dd>
+</dl>
+
+<h2>Các tháng đã đóng quỹ</h2>
+{% if summary.payments %}
+<table>
+  <thead><tr><th>Tháng</th><th>Ngày đóng</th><th class="num">Số tiền</th></tr></thead>
+  <tbody>
+    {% for p in summary.payments %}
+    <tr><td>{{ p.dues_month }}</td><td>{{ p.received_on | date_vn }}</td><td class="num">{{ p.amount | vnd }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">Chưa có lần đóng quỹ nào.</p>
+{% endif %}
+
+{% if user.is_treasurer and member.is_active %}
+<section class="card">
+  <h2>Ghi nhận rời câu lạc bộ</h2>
+  <form method="post" action="/members/{{ member.id }}/leave">
+    <label>Ngày rời <input type="date" name="left_on"></label>
+    <button type="submit" class="danger">Xác nhận rời</button>
+  </form>
+</section>
+{% endif %}
+<p><a href="/members">Quay lại danh sách</a></p>
+{% endblock %}

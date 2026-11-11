@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Sổ thu chi{% endblock %} | Sổ thu chi câu lạc bộ</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">Sổ thu chi CLB</a>
+    {% if user %}
+    <nav>
+      <a href="/">Tổng quan</a>
+      <a href="/members">Thành viên</a>
+      <a href="/incomes">Khoản thu</a>
+      <a href="/expenses">Khoản chi</a>
+      {% if user.is_treasurer %}
+      <a href="/reports/monthly">Báo cáo tháng</a>
+      <a href="/reports/unpaid">Chưa đóng quỹ</a>
+      {% endif %}
+    </nav>
+    <div class="account">
+      <span>{{ user.display_name }} ({{ user.role_label }})</span>
+      <form method="post" action="/logout" class="inline">
+        <button type="submit" class="link">Đăng xuất</button>
+      </form>
+    </div>
+    {% endif %}
+  </header>
+
+  <main>
+    {% for item in messages %}
+    <div class="flash flash-{{ item.category }}">{{ item.message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

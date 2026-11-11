@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Chưa đóng quỹ {{ month }}{% endblock %}
+{% block content %}
+<h1>Chưa đóng quỹ tháng {{ month }}</h1>
+<form method="get" action="/reports/unpaid" class="search">
+  <input type="month" name="month" value="{{ month }}">
+  <button type="submit">Xem</button>
+</form>
+
+{% if members %}
+<table>
+  <thead><tr><th>Họ tên</th><th>Mã sinh viên</th><th>Ngày tham gia</th></tr></thead>
+  <tbody>
+    {% for m in members %}
+    <tr>
+      <td><a href="/members/{{ m.id }}">{{ m.full_name }}</a></td>
+      <td>{{ m.student_code }}</td>
+      <td>{{ m.joined_on | date_vn }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p class="muted">{{ members | length }} người chưa đóng.</p>
+{% else %}
+<p class="empty">Mọi thành viên đã đóng quỹ tháng {{ month }}.</p>
+{% endif %}
+{% endblock %}

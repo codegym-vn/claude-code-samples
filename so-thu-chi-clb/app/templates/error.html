@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <h1>{{ title }}</h1>
+  <p>{{ detail }}</p>
+  <p class="muted">Mã lỗi {{ status }}.</p>
+  <p><a href="/">Về trang tổng quan</a></p>
+</section>
+{% endblock %}

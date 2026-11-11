@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Tổng quan{% endblock %}
+{% block content %}
+<h1>Tổng quan quỹ</h1>
+<div class="stats">
+  <div class="stat">
+    <span class="label">Số dư quỹ hiện tại</span>
+    <span class="value" id="fund-balance">{{ summary.balance | vnd }}</span>
+  </div>
+  <div class="stat">
+    <span class="label">Thu tháng {{ summary.month }}</span>
+    <span class="value">{{ summary.month_income | vnd }}</span>
+  </div>
+  <div class="stat">
+    <span class="label">Chi tháng {{ summary.month }}</span>
+    <span class="value">{{ summary.month_expense | vnd }}</span>
+  </div>
+  <div class="stat">
+    <span class="label">Thành viên đang sinh hoạt</span>
+    <span class="value">{{ summary.active_members }}</span>
+  </div>
+</div>
+
+{% if user.is_treasurer %}
+<section class="card">
+  <h2>Việc cần làm</h2>
+  <ul>
+    <li>Có <strong>{{ summary.unpaid_count }}</strong> người chưa đóng quỹ tháng {{ summary.month }}.
+      <a href="/reports/unpaid?month={{ summary.month }}">Xem danh sách</a></li>
+    <li><a href="/incomes/new">Ghi khoản thu mới</a></li>
+    <li><a href="/expenses/new">Ghi khoản chi mới</a></li>
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

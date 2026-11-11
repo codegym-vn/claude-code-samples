@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Khoản thu{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Khoản thu</h1>
+  {% if user.is_treasurer %}<a class="button" href="/incomes/new">Ghi khoản thu</a>{% endif %}
+</div>
+
+<form method="get" action="/incomes" class="search">
+  <input type="month" name="month" value="{{ month }}">
+  <button type="submit">Lọc theo tháng</button>
+  {% if month %}<a href="/incomes">Xem tất cả</a>{% endif %}
+</form>
+
+{% if incomes %}
+<table>
+  <thead>
+    <tr><th>Ngày</th><th>Loại</th><th>Thành viên</th><th>Tháng quỹ</th><th>Ghi chú</th><th class="num">Số tiền</th></tr>
+  </thead>
+  <tbody>
+    {% for i in incomes %}
+    <tr>
+      <td>{{ i.received_on | date_vn }}</td>
+      <td>{{ i.kind_label }}</td>
+      <td>{{ i.member_name or "" }}</td>
+      <td>{{ i.dues_month or "" }}</td>
+      <td>{{ i.note }}</td>
+      <td class="num">{{ i.amount | vnd }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr><th colspan="5">Tổng cộng</th><th class="num">{{ total | vnd }}</th></tr>
+  </tfoot>
+</table>
+{% else %}
+<p class="empty">Chưa có khoản thu nào.</p>
+{% endif %}
+{% endblock %}

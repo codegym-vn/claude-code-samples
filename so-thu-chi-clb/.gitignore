@@ -1,0 +1,22 @@
+# Local configuration and secrets
+.env
+
+# SQLite databases
+data/
+*.db
+*.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store

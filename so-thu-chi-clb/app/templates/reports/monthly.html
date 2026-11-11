@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Báo cáo tháng {{ report.month }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Báo cáo tháng {{ report.month }}</h1>
+  <div class="pager">
+    <a href="/reports/monthly?month={{ prev_month }}">Tháng trước</a>
+    <a href="/reports/monthly?month={{ next_month }}">Tháng sau</a>
+  </div>
+</div>
+<p class="muted">Từ {{ report.first_day.isoformat() | date_vn }} đến {{ report.last_day.isoformat() | date_vn }}.</p>
+
+<div class="stats">
+  <div class="stat"><span class="label">Tổng thu</span><span class="value" id="total-income">{{ report.total_income | vnd }}</span></div>
+  <div class="stat"><span class="label">Tổng chi</span><span class="value" id="total-expense">{{ report.total_expense | vnd }}</span></div>
+  <div class="stat"><span class="label">Chênh lệch</span><span class="value" id="net">{{ report.net | vnd }}</span></div>
+</div>
+
+<section class="card">
+  <h2>Tóm tắt</h2>
+  <ul>
+    <li>Quỹ tháng: {{ report.total_dues | vnd }}; ủng hộ: {{ report.total_donations | vnd }}.</li>
+    <li>Số thành viên trong tháng: {{ report.members_in_month }}.</li>
+    <li>Thu bình quân mỗi thành viên: khoảng {{ report.average_per_member | vnd }}.</li>
+    <li>Chênh lệch thu chi, làm tròn: {{ report.net | vnd_rounded }}.</li>
+  </ul>
+</section>
+
+<h2>Chi theo nhóm</h2>
+{% if report.by_category %}
+<table>
+  <thead><tr><th>Nhóm</th><th class="num">Số tiền</th></tr></thead>
+  <tbody>
+    {% for name, amount in report.by_category %}
+    <tr><td>{{ name }}</td><td class="num">{{ amount | vnd }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">Không có khoản chi nào trong tháng.</p>
+{% endif %}
+
+<h2>Chi tiết khoản thu</h2>
+{% if report.incomes %}
+<table>
+  <thead><tr><th>Ngày</th><th>Loại</th><th>Thành viên</th><th class="num">Số tiền</th></tr></thead>
+  <tbody>
+    {% for i in report.incomes %}
+    <tr><td>{{ i.received_on | date_vn }}</td><td>{{ i.kind_label }}</td><td>{{ i.member_name or i.note }}</td><td class="num">{{ i.amount | vnd }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">Không có khoản thu nào trong tháng.</p>
+{% endif %}
+
+<h2>Chi tiết khoản chi</h2>
+{% if report.expenses %}
+<table>
+  <thead><tr><th>Ngày</th><th>Nhóm</th><th>Nội dung</th><th class="num">Số tiền</th></tr></thead>
+  <tbody>
+    {% for e in report.expenses %}
+    <tr><td>{{ e.spent_on | date_vn }}</td><td>{{ e.category }}</td><td>{{ e.description }}</td><td class="num">{{ e.amount | vnd }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">Không có khoản chi nào trong tháng.</p>
+{% endif %}
+{% endblock %}

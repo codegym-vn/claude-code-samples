@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Thêm thành viên{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <h1>Thêm thành viên</h1>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form method="post" action="/members/new">
+    <label>Họ tên
+      <input type="text" name="full_name" value="{{ form.full_name }}" required>
+    </label>
+    <label>Mã sinh viên
+      <input type="text" name="student_code" value="{{ form.student_code }}" placeholder="SV2024001" required>
+    </label>
+    <label>Ngày tham gia
+      <input type="date" name="joined_on" value="{{ form.joined_on }}" required>
+    </label>
+    <button type="submit">Lưu</button>
+    <a href="/members">Hủy</a>
+  </form>
+</section>
+{% endblock %}

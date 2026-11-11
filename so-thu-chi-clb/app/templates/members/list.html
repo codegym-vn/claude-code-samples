@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Thành viên{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Thành viên</h1>
+  {% if user.is_treasurer %}<a class="button" href="/members/new">Thêm thành viên</a>{% endif %}
+</div>
+
+<form method="get" action="/members" class="search">
+  <input type="search" name="q" value="{{ q }}" placeholder="Tìm theo họ tên hoặc mã sinh viên">
+  <button type="submit">Tìm</button>
+</form>
+
+{% if members %}
+<table>
+  <thead>
+    <tr><th>Họ tên</th><th>Mã sinh viên</th><th>Ngày tham gia</th><th>Trạng thái</th></tr>
+  </thead>
+  <tbody>
+    {% for m in members %}
+    <tr class="{{ '' if m.is_active else 'muted' }}">
+      <td><a href="/members/{{ m.id }}">{{ m.full_name }}</a></td>
+      <td>{{ m.student_code }}</td>
+      <td>{{ m.joined_on | date_vn }}</td>
+      <td>{% if m.is_active %}Đang sinh hoạt{% else %}Đã rời ({{ m.left_on | date_vn }}){% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p class="muted">{{ members | length }} thành viên.</p>
+{% else %}
+<p class="empty">Không tìm thấy thành viên nào{% if q %} khớp với "{{ q }}"{% endif %}.</p>
+{% endif %}
+{% endblock %}

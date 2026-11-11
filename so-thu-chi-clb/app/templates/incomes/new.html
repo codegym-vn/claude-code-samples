@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Ghi khoản thu{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <h1>Ghi khoản thu</h1>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form method="post" action="/incomes/new">
+    <label>Loại khoản thu
+      <select name="kind">
+        {% for value, label in kinds.items() %}
+        <option value="{{ value }}" {% if form.kind == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Ngày thu
+      <input type="date" name="received_on" value="{{ form.received_on }}" required>
+    </label>
+    <label>Số tiền (đồng)
+      <input type="text" name="amount" value="{{ form.amount }}" inputmode="numeric" required>
+    </label>
+    <label>Thành viên (bắt buộc với quỹ tháng)
+      <select name="member_id">
+        <option value="">Không gắn thành viên</option>
+        {% for m in members %}
+        <option value="{{ m.id }}" {% if form.member_id == m.id | string %}selected{% endif %}>{{ m.full_name }} ({{ m.student_code }})</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Tháng đóng quỹ
+      <input type="month" name="dues_month" value="{{ form.dues_month }}">
+    </label>
+    <label>Ghi chú
+      <input type="text" name="note" value="{{ form.note }}">
+    </label>
+    <button type="submit">Lưu</button>
+    <a href="/incomes">Hủy</a>
+  </form>
+</section>
+{% endblock %}

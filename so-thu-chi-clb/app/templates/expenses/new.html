@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Ghi khoản chi{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <h1>Ghi khoản chi</h1>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form method="post" action="/expenses/new">
+    <label>Ngày chi
+      <input type="date" name="spent_on" value="{{ form.spent_on }}" required>
+    </label>
+    <label>Số tiền (đồng)
+      <input type="text" name="amount" value="{{ form.amount }}" inputmode="numeric" required>
+    </label>
+    <label>Nhóm chi
+      <select name="category">
+        {% for c in categories %}
+        <option value="{{ c }}" {% if form.category == c %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Nội dung
+      <input type="text" name="description" value="{{ form.description }}" required>
+    </label>
+    <button type="submit">Lưu</button>
+    <a href="/expenses">Hủy</a>
+  </form>
+</section>
+{% endblock %}

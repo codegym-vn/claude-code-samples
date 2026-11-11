@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Khoản chi{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Khoản chi</h1>
+  {% if user.is_treasurer %}<a class="button" href="/expenses/new">Ghi khoản chi</a>{% endif %}
+</div>
+
+{% if expenses %}
+<table>
+  <thead>
+    <tr><th>Ngày</th><th>Nhóm</th><th>Nội dung</th><th class="num">Số tiền</th><th>Trạng thái</th>{% if user.is_treasurer %}<th></th>{% endif %}</tr>
+  </thead>
+  <tbody>
+    {% for e in expenses %}
+    <tr class="{{ 'muted' if e.is_cancelled else '' }}">
+      <td>{{ e.spent_on | date_vn }}</td>
+      <td>{{ e.category }}</td>
+      <td>{{ e.description }}</td>
+      <td class="num">{{ e.amount | vnd }}</td>
+      <td>{% if e.is_cancelled %}Đã hủy {{ e.cancelled_on | date_vn }}{% if e.cancel_note %}: {{ e.cancel_note }}{% endif %}{% else %}Hiệu lực{% endif %}</td>
+      {% if user.is_treasurer %}
+      <td>
+        {% if not e.is_cancelled %}
+        <form method="post" action="/expenses/{{ e.id }}/cancel" class="inline">
+          <input type="text" name="note" placeholder="Lý do hủy">
+          <button type="submit" class="danger">Hủy</button>
+        </form>
+        {% endif %}
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr><th colspan="3">Tổng chi (không tính khoản đã hủy)</th><th class="num">{{ total_active | vnd }}</th><th colspan="2"></th></tr>
+  </tfoot>
+</table>
+{% else %}
+<p class="empty">Chưa có khoản chi nào.</p>
+{% endif %}
+{% endblock %}
